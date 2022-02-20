@@ -1,0 +1,45 @@
+services:
+  pushgateway:
+    container_name: pushgateway
+    image: bitnami/pushgateway:latest
+    ports:
+      - 9091:9091
+    networks:
+      - prometheus-network-grafana
+  prometheus:
+    container_name: prometheus
+    image: bitnami/prometheus:latest
+    ports:
+      - 9093:9090
+    volumes:
+      - $PWD/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - prometheus-network-grafana
+    depends_on:
+      - pushgateway
+  grafana:
+    container_name: grafana
+    image: grafana/grafana-enterprise
+    ports:
+      - 3003:3000
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+      - GF_USERS_ALLOW_SIGN_UP=false
+    networks:
+      - prometheus-network-grafana
+    depends_on:
+      - prometheus
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+
+
+networks:
+  prometheus-network-grafana:
+    name: prometheus-network-grafana
+    driver: bridge
+
+#docker network create pushgateway-network --driver bridge
+#docker run --name prometheus -p 9093:9090 --network pushgateway-network -v /Users/gonzalogarcia/dev/src/theam/booster_projects/booster/prometheus.yml:/etc/prometheus/prometheus.yml bitnami/prometheus:latest
+#docker run --network pushgateway-network  --name pushgateway -p 9091:9091 bitnami/pushgateway:latest
+#docker run -d --name=grafana -p 3000:3000 grafana/grafana-enterprise

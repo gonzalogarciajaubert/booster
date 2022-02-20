@@ -15,6 +15,7 @@ import { GraphQLResolverContext, graphQLWebsocketSubprotocolHeaders } from './se
 import { NoopReadModelPubSub } from './services/pub-sub/noop-read-model-pub-sub'
 import { GraphQLWebsocketHandler } from './services/graphql/websocket-protocol/graphql-websocket-protocol'
 import { BoosterTokenVerifier } from './booster-token-verifier'
+import { Around, Before } from './decorators/advices'
 
 type DispatchResult = AsyncIterableIterator<ExecutionResult> | ExecutionResult | void
 
@@ -41,6 +42,8 @@ export class BoosterGraphQLDispatcher {
     )
   }
 
+  @Around('BoosterGraphQLDispatcher')
+  @Before('BoosterGraphQLDispatcher')
   public async dispatch(request: unknown): Promise<unknown> {
     const envelopeOrError = await this.config.provider.graphQL.rawToEnvelope(request, this.logger, this.config)
     this.logger.debug('Received the following GraphQL envelope: ', envelopeOrError)

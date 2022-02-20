@@ -2,22 +2,26 @@ import { Booster } from '@boostercloud/framework-core'
 import { BoosterConfig } from '@boostercloud/framework-types'
 import * as fs from 'fs'
 import * as path from 'path'
+import { BoosterRocketPrometheus } from '@boostercloud/rocket-prometheus'
 
 Booster.configure('local', (config: BoosterConfig): void => {
   config.appName = 'my-store'
   config.providerPackage = '@boostercloud/framework-provider-local'
+  config.rockets = [new BoosterRocketPrometheus(config, 'http://0.0.0.0:9091').configure()]
 })
 
 Booster.configure('kubernetes', (config: BoosterConfig): void => {
   config.appName = 'my-store'
   config.providerPackage = '@boostercloud/framework-provider-kubernetes'
   config.assets = ['assets', 'components', 'assetFile.txt']
+  config.rockets = [new BoosterRocketPrometheus(config, 'http://0.0.0.0:9091').configure()]
 })
 
 Booster.configure('development', (config: BoosterConfig): void => {
   config.appName = 'my-store'
   config.providerPackage = '@boostercloud/framework-provider-aws'
   config.assets = ['assets', 'assetFile.txt']
+  config.rockets = [new BoosterRocketPrometheus(config, 'http://0.0.0.0:9091').configure()]
 })
 
 Booster.configure('production', (config: BoosterConfig): void => {
@@ -40,6 +44,7 @@ Booster.configure('production', (config: BoosterConfig): void => {
       rolesClaim: 'booster:role',
     },
   ]
+  config.rockets = [new BoosterRocketPrometheus(config, 'http://0.0.0.0:9091').configure()]
 })
 
 Booster.configure('azure', (config: BoosterConfig): void => {
@@ -62,4 +67,5 @@ Booster.configure('azure', (config: BoosterConfig): void => {
       rolesClaim: 'booster:role',
     },
   ]
+  config.rockets = [new BoosterRocketPrometheus(config, 'http://0.0.0.0:9091').configure()]
 })

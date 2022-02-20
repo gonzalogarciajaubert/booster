@@ -16,6 +16,7 @@ import { ProviderLibrary } from './provider'
 import { Level } from './logger'
 import * as path from 'path'
 import { RocketDescriptor, RocketFunction } from './rocket-descriptor'
+import { EmitFunction } from './concepts/emit-metadata'
 
 /**
  * Class used by external packages that needs to get a representation of
@@ -56,6 +57,18 @@ export class BoosterConfig {
   public readonly roles: Record<RoleName, RoleMetadata> = {}
   public readonly migrations: Record<ConceptName, Map<Version, MigrationMetadata>> = {}
   public readonly scheduledCommandHandlers: Record<ScheduledCommandName, ScheduledCommandMetadata> = {}
+
+  public readonly advisersFunctionMap: Record<string, EmitFunction> = {}
+
+  public registerAdviceFunction(id: string, func: EmitFunction): void {
+    const currentFunction = this.advisersFunctionMap[id]
+    if (currentFunction) {
+      throw new Error(
+        `Error registering advise function with id ${id}: There is already an advise function registered under the same ID, "${currentFunction.name}"`
+      )
+    }
+    this.advisersFunctionMap[id] = func
+  }
 
   private rocketFunctionMap: Record<string, RocketFunction> = {}
   public registerRocketFunction(id: string, func: RocketFunction): void {

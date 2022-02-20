@@ -15,41 +15,68 @@ import {
 import { Booster } from './booster'
 import { BoosterAuth } from './booster-auth'
 import { applyReadModelRequestBeforeFunctions } from './services/filter-helpers'
+import { Around, Before } from './decorators/advices'
+import { emit } from './services/advice-emitter'
 
 export class BoosterReadModelsReader {
   public constructor(readonly config: BoosterConfig, readonly logger: Logger) {}
 
+  @Around('BoosterReadModelsReader')
+  @Before('BoosterReadModelsReader')
   public async findById(
     readModelRequest: ReadModelRequestEnvelope<ReadModelInterface>
   ): Promise<ReadModelInterface | ReadOnlyNonEmptyArray<ReadModelInterface>> {
-    this.validateByIdRequest(readModelRequest)
+    try {
+      emit(this.config, 'READMODELS_AROUND_BEFORE', { readModelName: readModelRequest.class.name, method: 'findById' })
+      this.validateByIdRequest(readModelRequest)
 
-    const readModelMetadata = this.config.readModels[readModelRequest.class.name]
-    const readModelTransformedRequest = applyReadModelRequestBeforeFunctions(readModelRequest, readModelMetadata.before)
+      emit(this.config, 'READMODELS_BEFORE_CUSTOM', { readModelName: readModelRequest.class.name, method: 'findById' })
 
-    const key = readModelTransformedRequest.key
-    if (!key) {
-      throw 'Tried to run a findById operation without providing a key. An ID is required to perform this operation.'
+      const readModelMetadata = this.config.readModels[readModelRequest.class.name]
+      const readModelTransformedRequest = applyReadModelRequestBeforeFunctions(
+        readModelRequest,
+        readModelMetadata.before
+      )
+
+      const key = readModelTransformedRequest.key
+      if (!key) {
+        throw 'Tried to run a findById operation without providing a key. An ID is required to perform this operation.'
+      }
+      return Booster.readModel(readModelMetadata.class).findById(key.id, key.sequenceKey)
+    } finally {
+      emit(this.config, 'READMODELS_AROUND_AFTER', { readModelName: readModelRequest.class.name, method: 'findById' })
     }
-    return Booster.readModel(readModelMetadata.class).findById(key.id, key.sequenceKey)
   }
 
+  @Around('BoosterReadModelsReader')
+  @Before('BoosterReadModelsReader')
   public async search(
     readModelRequest: ReadModelRequestEnvelope<ReadModelInterface>
   ): Promise<Array<ReadModelInterface> | ReadModelListResult<ReadModelInterface>> {
-    this.validateRequest(readModelRequest)
+    try {
+      emit(this.config, 'READMODELS_AROUND_BEFORE', { readModelName: readModelRequest.class.name, method: 'search' })
+      this.validateRequest(readModelRequest)
 
-    const readModelMetadata = this.config.readModels[readModelRequest.class.name]
-    const readModelTransformedRequest = applyReadModelRequestBeforeFunctions(readModelRequest, readModelMetadata.before)
+      emit(this.config, 'READMODELS_BEFORE_CUSTOM', { readModelName: readModelRequest.class.name, method: 'search' })
+      const readModelMetadata = this.config.readModels[readModelRequest.class.name]
+      const readModelTransformedRequest = applyReadModelRequestBeforeFunctions(
+        readModelRequest,
+        readModelMetadata.before
+      )
 
-    return Booster.readModel(readModelMetadata.class)
-      .filter(readModelTransformedRequest.filters)
-      .limit(readModelTransformedRequest.limit)
-      .afterCursor(readModelTransformedRequest.afterCursor)
-      .paginatedVersion(readModelTransformedRequest.paginatedVersion)
-      .search()
+      return Booster.readModel(readModelMetadata.class)
+        .filter(readModelTransformedRequest.filters)
+        .limit(readModelTransformedRequest.limit)
+        .afterCursor(readModelTransformedRequest.afterCursor)
+        .paginatedVersion(readModelTransformedRequest.paginatedVersion)
+        .search()
+    } finally {
+      emit(this.config, 'READMODELS_AROUND_AFTER', { readModelName: readModelRequest.class.name, method: 'search' })
+    }
   }
 
+  @Around('BoosterReadModelsReader')
+  @Before('BoosterReadModelsReader')
   public async subscribe(
     connectionID: string,
     readModelRequest: ReadModelRequestEnvelope<ReadModelInterface>,
@@ -59,10 +86,14 @@ export class BoosterReadModelsReader {
     return this.processSubscription(connectionID, readModelRequest, operation)
   }
 
+  @Around('BoosterReadModelsReader')
+  @Before('BoosterReadModelsReader')
   public async unsubscribe(connectionID: string, subscriptionID: string): Promise<void> {
     return this.config.provider.readModels.deleteSubscription(this.config, this.logger, connectionID, subscriptionID)
   }
 
+  @Around('BoosterReadModelsReader')
+  @Before('BoosterReadModelsReader')
   public async unsubscribeAll(connectionID: string): Promise<void> {
     return this.config.provider.readModels.deleteAllSubscriptions(this.config, this.logger, connectionID)
   }
