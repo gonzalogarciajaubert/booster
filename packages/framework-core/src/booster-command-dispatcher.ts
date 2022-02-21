@@ -11,13 +11,13 @@ import { BoosterAuth } from './booster-auth'
 import { RegisterHandler } from './booster-register-handler'
 import { createInstance } from '@boostercloud/framework-common-helpers'
 import { applyBeforeFunctions } from './services/filter-helpers'
-import { Around, Before } from './decorators/advices'
+import { AroundAdvice, BeforeAdvice } from './decorators/advices'
 
 export class BoosterCommandDispatcher {
   public constructor(readonly config: BoosterConfig, readonly logger: Logger) {}
 
-  @Around('BoosterCommandDispatcher')
-  @Before('BoosterCommandDispatcher')
+  @AroundAdvice('BoosterCommandDispatcher')
+  @BeforeAdvice('BoosterCommandDispatcher')
   public async dispatchCommand(commandEnvelope: CommandEnvelope): Promise<unknown> {
     this.logger.debug('Dispatching the following command envelope: ', commandEnvelope)
     if (!commandEnvelope.version) {

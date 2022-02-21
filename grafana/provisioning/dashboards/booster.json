@@ -21,7 +21,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 4,
+  "id": 1,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -29,7 +29,35 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
           },
           "mappings": [],
           "thresholds": {
@@ -49,101 +77,35 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
-        "w": 7,
+        "h": 8,
+        "w": 12,
         "x": 0,
         "y": 0
       },
-      "id": 10,
+      "id": 14,
       "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
         },
-        "textMode": "auto"
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
       },
-      "pluginVersion": "8.4.1",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "i5RgvTf7k"
-          },
+          "datasource": "prometheus",
           "exemplar": true,
-          "expr": "booster_readmodel_total_count{}",
+          "expr": "booster_reducer_total_count{}",
           "interval": "",
-          "legendFormat": "{{methodName}}",
+          "legendFormat": "",
           "refId": "A"
         }
       ],
-      "title": "ReadModels methods total count",
-      "type": "stat"
-    },
-    {
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 10,
-        "x": 7,
-        "y": 0
-      },
-      "id": 2,
-      "options": {
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true
-      },
-      "pluginVersion": "8.4.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "i5RgvTf7k"
-          },
-          "exemplar": true,
-          "expr": "rate(booster_methods_total_count{}[2000s])",
-          "interval": "",
-          "legendFormat": "{{methodName}}",
-          "refId": "A"
-        }
-      ],
-      "title": "Methods count (Rate per 2000s)",
-      "type": "gauge"
+      "title": "Panel Title",
+      "type": "timeseries"
     },
     {
       "fieldConfig": {
@@ -190,10 +152,7 @@
       "pluginVersion": "8.4.1",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "i5RgvTf7k"
-          },
+          "datasource": "prometheus",
           "exemplar": true,
           "expr": "rate(booster_events_total_count{}[5000s])",
           "interval": "",
@@ -256,12 +215,12 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
-        "w": 9,
+        "h": 7,
+        "w": 7,
         "x": 0,
-        "y": 9
+        "y": 8
       },
-      "id": 7,
+      "id": 12,
       "options": {
         "legend": {
           "calcs": [],
@@ -275,19 +234,186 @@
       },
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "i5RgvTf7k"
-          },
+          "datasource": "prometheus",
           "exemplar": true,
-          "expr": "booster_events_total_count{}",
+          "expr": "rate(booster_reducer_total_count{}[2m])",
           "interval": "",
-          "legendFormat": "{{eventName}}",
+          "legendFormat": "",
           "refId": "A"
         }
       ],
-      "title": "Events Processor total count",
+      "title": "Panel Title",
       "type": "timeseries"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 10,
+        "x": 7,
+        "y": 8
+      },
+      "id": 2,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "8.4.1",
+      "targets": [
+        {
+          "datasource": "prometheus",
+          "exemplar": true,
+          "expr": "rate(booster_methods_total_count{}[2000s])",
+          "interval": "",
+          "legendFormat": "{{methodName}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Methods count (Rate per 2000s)",
+      "type": "gauge"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 7,
+        "x": 17,
+        "y": 9
+      },
+      "id": 4,
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true
+      },
+      "pluginVersion": "8.4.1",
+      "targets": [
+        {
+          "datasource": "prometheus",
+          "exemplar": true,
+          "expr": "booster_methods_duration_ms_count{}",
+          "interval": "",
+          "legendFormat": "{{methodName}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Methods duration",
+      "type": "bargauge"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 7,
+        "x": 0,
+        "y": 15
+      },
+      "id": 10,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.4.1",
+      "targets": [
+        {
+          "datasource": "prometheus",
+          "exemplar": true,
+          "expr": "booster_readmodel_total_count{}",
+          "interval": "",
+          "legendFormat": "{{methodName}}",
+          "refId": "A"
+        }
+      ],
+      "title": "ReadModels methods total count",
+      "type": "stat"
     },
     {
       "fieldConfig": {
@@ -344,7 +470,7 @@
         "h": 9,
         "w": 8,
         "x": 9,
-        "y": 9
+        "y": 17
       },
       "id": 5,
       "options": {
@@ -360,10 +486,7 @@
       },
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "i5RgvTf7k"
-          },
+          "datasource": "prometheus",
           "exemplar": true,
           "expr": "booster_methods_total_count{}",
           "interval": "",
@@ -378,7 +501,35 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
           },
           "mappings": [],
           "thresholds": {
@@ -399,39 +550,34 @@
       },
       "gridPos": {
         "h": 9,
-        "w": 7,
-        "x": 17,
-        "y": 9
+        "w": 9,
+        "x": 0,
+        "y": 24
       },
-      "id": 4,
+      "id": 7,
       "options": {
-        "displayMode": "gradient",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
         },
-        "showUnfilled": true
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
       },
-      "pluginVersion": "8.4.1",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "i5RgvTf7k"
-          },
+          "datasource": "prometheus",
           "exemplar": true,
-          "expr": "booster_methods_duration_ms_count{}",
+          "expr": "booster_events_total_count{}",
           "interval": "",
-          "legendFormat": "{{methodName}}",
+          "legendFormat": "{{eventName}}",
           "refId": "A"
         }
       ],
-      "title": "Methods duration",
-      "type": "bargauge"
+      "title": "Events Processor total count",
+      "type": "timeseries"
     }
   ],
   "refresh": false,
@@ -449,6 +595,6 @@
   "timezone": "",
   "title": "Booster",
   "uid": "M0qatoB7k",
-  "version": 7,
+  "version": 1,
   "weekStart": ""
 }

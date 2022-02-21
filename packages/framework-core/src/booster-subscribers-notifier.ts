@@ -15,7 +15,7 @@ import { FilteredReadModelPubSub, ReadModelPubSub } from './services/pub-sub/rea
 import { GraphQLResolverContext } from './services/graphql/common'
 import { ExecutionResult } from 'graphql/execution/execute'
 import { Promises } from '@boostercloud/framework-common-helpers'
-import { Around, Before } from './decorators/advices'
+import { AroundAdvice, BeforeAdvice } from './decorators/advices'
 
 export class BoosterSubscribersNotifier {
   private readonly graphQLSchema: GraphQLSchema
@@ -24,8 +24,8 @@ export class BoosterSubscribersNotifier {
     this.graphQLSchema = GraphQLGenerator.generateSchema(config, logger)
   }
 
-  @Around('BoosterSubscribersNotifier')
-  @Before('BoosterSubscribersNotifier')
+  @AroundAdvice('BoosterSubscribersNotifier')
+  @BeforeAdvice('BoosterSubscribersNotifier')
   public async dispatch(request: unknown): Promise<void> {
     try {
       this.logger.debug('Received the following event for subscription dispatching: ', request)

@@ -13,13 +13,13 @@ import {
 } from '@boostercloud/framework-types'
 import { BoosterAuth } from './booster-auth'
 import { Booster } from './booster'
-import { Around, Before } from './decorators/advices'
+import { AroundAdvice, BeforeAdvice } from './decorators/advices'
 
 export class BoosterEventsReader {
   public constructor(readonly config: BoosterConfig, readonly logger: Logger) {}
 
-  @Around('BoosterEventsReader')
-  @Before('BoosterEventsReader')
+  @AroundAdvice('BoosterEventsReader')
+  @BeforeAdvice('BoosterEventsReader')
   public async fetch(eventRequest: EventSearchRequest): Promise<Array<EventSearchResponse>> {
     this.validateRequest(eventRequest)
     return this.processFetch(eventRequest)

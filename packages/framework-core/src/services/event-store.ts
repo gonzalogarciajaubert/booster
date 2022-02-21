@@ -7,6 +7,8 @@ import {
   InvalidParameterError,
 } from '@boostercloud/framework-types'
 import { createInstance } from '@boostercloud/framework-common-helpers'
+import { emit } from './advice-emitter'
+import { Booster } from '../booster'
 
 const originOfTime = new Date(0).toISOString() // Unix epoch
 
@@ -107,6 +109,9 @@ export class EventStore {
       const entityMetadata = this.config.entities[eventEnvelope.entityTypeName]
       const snapshotInstance = latestSnapshot ? createInstance(entityMetadata.class, latestSnapshot.value) : null
       const newEntity = this.reducerForEvent(eventEnvelope.typeName)(eventInstance, snapshotInstance)
+      Booster.configureCurrentEnv((config): void => {
+        emit(config, 'ENTITYREDUCER_COUNT', { entityTypeName: eventEnvelope.entityTypeName })
+      })
       const newSnapshot: EventEnvelope = {
         version: this.config.currentVersionFor(eventEnvelope.entityTypeName),
         kind: 'snapshot',

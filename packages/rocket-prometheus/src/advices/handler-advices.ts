@@ -29,7 +29,7 @@ export class HandlerAdvices {
         break
       case 'READMODELS_AROUND_AFTER':
         found = true
-        this.PrometheusMetric.endReadModel(adviseParams['readModelName'], adviseParams['method'])
+        this.PrometheusMetric.endReadModel()
         break
     }
     return found
@@ -48,7 +48,11 @@ export class HandlerAdvices {
         break
       case 'EVENTPROCESSOR_AROUND_AFTER':
         found = true
-        this.PrometheusMetric.endEventProcessor(adviseParams['entityName'])
+        this.PrometheusMetric.endEventProcessor()
+        break
+      case 'ENTITYREDUCER_COUNT':
+        found = true
+        this.PrometheusMetric.incReducer(1, adviseParams['entityTypeName'])
         break
     }
     return found
@@ -66,7 +70,7 @@ export class HandlerAdvices {
         this.PrometheusMetric.startMethod(className, methodName)
         break
       case 'AROUND_AFTER':
-        this.PrometheusMetric.endMethod(className, methodName)
+        this.PrometheusMetric.endMethod()
         break
     }
   }

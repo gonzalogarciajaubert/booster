@@ -15,14 +15,14 @@ import {
 import { Booster } from './booster'
 import { BoosterAuth } from './booster-auth'
 import { applyReadModelRequestBeforeFunctions } from './services/filter-helpers'
-import { Around, Before } from './decorators/advices'
+import { AroundAdvice, BeforeAdvice } from './decorators/advices'
 import { emit } from './services/advice-emitter'
 
 export class BoosterReadModelsReader {
   public constructor(readonly config: BoosterConfig, readonly logger: Logger) {}
 
-  @Around('BoosterReadModelsReader')
-  @Before('BoosterReadModelsReader')
+  @AroundAdvice('BoosterReadModelsReader')
+  @BeforeAdvice('BoosterReadModelsReader')
   public async findById(
     readModelRequest: ReadModelRequestEnvelope<ReadModelInterface>
   ): Promise<ReadModelInterface | ReadOnlyNonEmptyArray<ReadModelInterface>> {
@@ -48,8 +48,8 @@ export class BoosterReadModelsReader {
     }
   }
 
-  @Around('BoosterReadModelsReader')
-  @Before('BoosterReadModelsReader')
+  @AroundAdvice('BoosterReadModelsReader')
+  @BeforeAdvice('BoosterReadModelsReader')
   public async search(
     readModelRequest: ReadModelRequestEnvelope<ReadModelInterface>
   ): Promise<Array<ReadModelInterface> | ReadModelListResult<ReadModelInterface>> {
@@ -75,8 +75,8 @@ export class BoosterReadModelsReader {
     }
   }
 
-  @Around('BoosterReadModelsReader')
-  @Before('BoosterReadModelsReader')
+  @AroundAdvice('BoosterReadModelsReader')
+  @BeforeAdvice('BoosterReadModelsReader')
   public async subscribe(
     connectionID: string,
     readModelRequest: ReadModelRequestEnvelope<ReadModelInterface>,
@@ -86,14 +86,14 @@ export class BoosterReadModelsReader {
     return this.processSubscription(connectionID, readModelRequest, operation)
   }
 
-  @Around('BoosterReadModelsReader')
-  @Before('BoosterReadModelsReader')
+  @AroundAdvice('BoosterReadModelsReader')
+  @BeforeAdvice('BoosterReadModelsReader')
   public async unsubscribe(connectionID: string, subscriptionID: string): Promise<void> {
     return this.config.provider.readModels.deleteSubscription(this.config, this.logger, connectionID, subscriptionID)
   }
 
-  @Around('BoosterReadModelsReader')
-  @Before('BoosterReadModelsReader')
+  @AroundAdvice('BoosterReadModelsReader')
+  @BeforeAdvice('BoosterReadModelsReader')
   public async unsubscribeAll(connectionID: string): Promise<void> {
     return this.config.provider.readModels.deleteAllSubscriptions(this.config, this.logger, connectionID)
   }

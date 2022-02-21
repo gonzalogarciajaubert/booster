@@ -19,7 +19,7 @@ export class PrometheusBase {
   constructor(readonly config: BoosterConfig, readonly prometheusUrl: string) {
     const Registry = prometheusClient.Registry
     this._register = new Registry()
-
+    this._register.setDefaultLabels({ boosterVersion: process.env.npm_package_version });
     this._gateway = new prometheusClient.Pushgateway(
       prometheusUrl,
       {

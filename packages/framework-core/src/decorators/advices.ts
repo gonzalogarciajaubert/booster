@@ -5,7 +5,7 @@ import { Booster } from '../index'
 * className could be calculated using metadata, a class annotation, etc... 
 * for the time being this needs to be set in the annotation
 */
-export function Around(className: string) {
+export function AroundAdvice(className: string) {
   return (target: unknown, propertyKey: string, descriptor: PropertyDescriptor): PropertyDescriptor => {
     const originalMethod = descriptor.value
     descriptor.value = function (...args: any[]) {
@@ -19,7 +19,7 @@ export function Around(className: string) {
   }
 }
 
-export function Before(className: string) {
+export function BeforeAdvice(className: string) {
   return (target: unknown, propertyKey: string, descriptor: PropertyDescriptor): PropertyDescriptor => {
     const originalMethod = descriptor.value
     descriptor.value = function (...args: any[]) {

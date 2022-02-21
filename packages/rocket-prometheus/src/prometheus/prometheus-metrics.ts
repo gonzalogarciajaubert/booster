@@ -20,8 +20,8 @@ export class PrometheusMetric {
     this.start('booster_readmodel_duration_ms_count', ['readModelName', 'methodName'], [readModelName, methodName])
   }
 
-  public endReadModel(readModelName: string, methodName: string): void {
-    this.end('booster_readmodel_duration_ms_count', ['readModelName', 'methodName'], [readModelName, methodName])
+  public endReadModel(): void {
+    this.end('booster_readmodel_duration_ms_count', ['readModelName', 'methodName'])
   }
 
   public incEventProcessor(value: number, eventName: string): void {
@@ -32,8 +32,12 @@ export class PrometheusMetric {
     this.start('booster_events_duration_ms_count', ['eventName'], [eventName])
   }
 
-  public endEventProcessor(eventName: string): void {
-    this.end('booster_events_duration_ms_count', ['eventName'], [eventName])
+  public endEventProcessor(): void {
+    this.end('booster_events_duration_ms_count', ['eventName'])
+  }
+
+  public incReducer(value: number, eventName: string): void {
+    this.inc(value, 'booster_reducer_total_count', ['eventName'], [eventName])
   }
 
   public incMethod(value: number, className: string, methodName: string): void {
@@ -44,8 +48,8 @@ export class PrometheusMetric {
     this.start('booster_methods_duration_ms_count', ['className', 'methodName'], [className, methodName])
   }
 
-  public endMethod(className: string, methodName: string): void {
-    this.end('booster_methods_duration_ms_count', ['className', 'methodName'], [className, methodName])
+  public endMethod(): void {
+    this.end('booster_methods_duration_ms_count', ['className', 'methodName'])
   }
 
   private inc(incValue: number, metricName: string, labelsNames: Array<string>, values: Array<string>): void {
@@ -59,9 +63,9 @@ export class PrometheusMetric {
     prometheusGaugage.preGauge(values)
   }
 
-  private end(metricName: string, labelsNames: Array<string>, values: Array<string>): void {
+  private end(metricName: string, labelsNames: Array<string>): void {
     const prometheusGauge = this.getPrometheusGauge(metricName, labelsNames)
-    prometheusGauge.postGauge(values)
+    prometheusGauge.postGauge()
     void this._prometheusBase.publish()
   }
 
