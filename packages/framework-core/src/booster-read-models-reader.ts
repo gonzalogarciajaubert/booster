@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
+  AdviceTypes,
   BoosterConfig,
   GraphQLOperation,
   InvalidParameterError,
@@ -19,33 +20,28 @@ import { AroundAdvice, BeforeAdvice } from './decorators/advices'
 import { emit } from './services/advice-emitter'
 
 export class BoosterReadModelsReader {
-  public constructor(readonly config: BoosterConfig, readonly logger: Logger) {}
+  public constructor(readonly config: BoosterConfig, readonly logger: Logger) { }
 
   @AroundAdvice('BoosterReadModelsReader')
   @BeforeAdvice('BoosterReadModelsReader')
   public async findById(
     readModelRequest: ReadModelRequestEnvelope<ReadModelInterface>
   ): Promise<ReadModelInterface | ReadOnlyNonEmptyArray<ReadModelInterface>> {
-    try {
-      emit(this.config, 'READMODELS_AROUND_BEFORE', { readModelName: readModelRequest.class.name, method: 'findById' })
-      this.validateByIdRequest(readModelRequest)
+    this.validateByIdRequest(readModelRequest)
 
-      emit(this.config, 'READMODELS_BEFORE_CUSTOM', { readModelName: readModelRequest.class.name, method: 'findById' })
+    emit(this.config, AdviceTypes.READ_MODELS_HIT, { readModelName: readModelRequest.class.name, method: 'findById' })
 
-      const readModelMetadata = this.config.readModels[readModelRequest.class.name]
-      const readModelTransformedRequest = applyReadModelRequestBeforeFunctions(
-        readModelRequest,
-        readModelMetadata.before
-      )
+    const readModelMetadata = this.config.readModels[readModelRequest.class.name]
+    const readModelTransformedRequest = applyReadModelRequestBeforeFunctions(
+      readModelRequest,
+      readModelMetadata.before
+    )
 
-      const key = readModelTransformedRequest.key
-      if (!key) {
-        throw 'Tried to run a findById operation without providing a key. An ID is required to perform this operation.'
-      }
-      return Booster.readModel(readModelMetadata.class).findById(key.id, key.sequenceKey)
-    } finally {
-      emit(this.config, 'READMODELS_AROUND_AFTER', { readModelName: readModelRequest.class.name, method: 'findById' })
+    const key = readModelTransformedRequest.key
+    if (!key) {
+      throw 'Tried to run a findById operation without providing a key. An ID is required to perform this operation.'
     }
+    return Booster.readModel(readModelMetadata.class).findById(key.id, key.sequenceKey)
   }
 
   @AroundAdvice('BoosterReadModelsReader')
@@ -53,26 +49,21 @@ export class BoosterReadModelsReader {
   public async search(
     readModelRequest: ReadModelRequestEnvelope<ReadModelInterface>
   ): Promise<Array<ReadModelInterface> | ReadModelListResult<ReadModelInterface>> {
-    try {
-      emit(this.config, 'READMODELS_AROUND_BEFORE', { readModelName: readModelRequest.class.name, method: 'search' })
-      this.validateRequest(readModelRequest)
+    this.validateRequest(readModelRequest)
 
-      emit(this.config, 'READMODELS_BEFORE_CUSTOM', { readModelName: readModelRequest.class.name, method: 'search' })
-      const readModelMetadata = this.config.readModels[readModelRequest.class.name]
-      const readModelTransformedRequest = applyReadModelRequestBeforeFunctions(
-        readModelRequest,
-        readModelMetadata.before
-      )
+    emit(this.config, AdviceTypes.READ_MODELS_HIT, { readModelName: readModelRequest.class.name, method: 'search' })
+    const readModelMetadata = this.config.readModels[readModelRequest.class.name]
+    const readModelTransformedRequest = applyReadModelRequestBeforeFunctions(
+      readModelRequest,
+      readModelMetadata.before
+    )
 
-      return Booster.readModel(readModelMetadata.class)
-        .filter(readModelTransformedRequest.filters)
-        .limit(readModelTransformedRequest.limit)
-        .afterCursor(readModelTransformedRequest.afterCursor)
-        .paginatedVersion(readModelTransformedRequest.paginatedVersion)
-        .search()
-    } finally {
-      emit(this.config, 'READMODELS_AROUND_AFTER', { readModelName: readModelRequest.class.name, method: 'search' })
-    }
+    return Booster.readModel(readModelMetadata.class)
+      .filter(readModelTransformedRequest.filters)
+      .limit(readModelTransformedRequest.limit)
+      .afterCursor(readModelTransformedRequest.afterCursor)
+      .paginatedVersion(readModelTransformedRequest.paginatedVersion)
+      .search()
   }
 
   @AroundAdvice('BoosterReadModelsReader')

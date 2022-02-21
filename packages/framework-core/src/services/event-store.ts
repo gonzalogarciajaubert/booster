@@ -5,6 +5,7 @@ import {
   UUID,
   EventEnvelope,
   InvalidParameterError,
+  AdviceTypes,
 } from '@boostercloud/framework-types'
 import { createInstance } from '@boostercloud/framework-common-helpers'
 import { emit } from './advice-emitter'
@@ -110,7 +111,7 @@ export class EventStore {
       const snapshotInstance = latestSnapshot ? createInstance(entityMetadata.class, latestSnapshot.value) : null
       const newEntity = this.reducerForEvent(eventEnvelope.typeName)(eventInstance, snapshotInstance)
       Booster.configureCurrentEnv((config): void => {
-        emit(config, 'ENTITYREDUCER_COUNT', { entityTypeName: eventEnvelope.entityTypeName })
+        emit(config, AdviceTypes.ENTITY_REDUCER_HIT, { entityTypeName: eventEnvelope.entityTypeName })
       })
       const newSnapshot: EventEnvelope = {
         version: this.config.currentVersionFor(eventEnvelope.entityTypeName),

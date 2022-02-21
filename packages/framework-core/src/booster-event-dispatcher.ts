@@ -5,6 +5,7 @@ import {
   Register,
   EventHandlerInterface,
   UUID,
+  AdviceTypes,
 } from '@boostercloud/framework-types'
 import { EventStore } from './services/event-store'
 import { EventsStreamingCallback, RawEventsParser } from './services/raw-events-parser'
@@ -42,22 +43,17 @@ export class BoosterEventDispatcher {
     logger: Logger
   ): EventsStreamingCallback {
     return async (entityName, entityID, eventEnvelopes, config) => {
-      try {
-        emit(config, 'EVENTPROCESSOR_AROUND_BEFORE', { entityName: entityName })
-        emit(config, 'EVENTPROCESSOR_BEFORE_CUSTOM', { entityName: entityName })
-        // TODO: Separate into two independent processes the snapshotting/read-model generation process from the event handling process`
-        await BoosterEventDispatcher.snapshotAndUpdateReadModels(
-          entityName,
-          entityID,
-          eventEnvelopes,
-          eventStore,
-          readModelStore,
-          logger
-        )
-        await BoosterEventDispatcher.dispatchEntityEventsToEventHandlers(eventEnvelopes, config, logger)
-      } finally {
-        emit(config, 'EVENTPROCESSOR_AROUND_AFTER', { entityName: entityName })
-      }
+      emit(config, AdviceTypes.EVENT_PROCESSOR_HIT, { entityName: entityName })
+      // TODO: Separate into two independent processes the snapshotting/read-model generation process from the event handling process`
+      await BoosterEventDispatcher.snapshotAndUpdateReadModels(
+        entityName,
+        entityID,
+        eventEnvelopes,
+        eventStore,
+        readModelStore,
+        logger
+      )
+      await BoosterEventDispatcher.dispatchEntityEventsToEventHandlers(eventEnvelopes, config, logger)
     }
   }
 

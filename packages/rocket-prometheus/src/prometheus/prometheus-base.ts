@@ -15,6 +15,7 @@ export class PrometheusBase {
 
   private readonly _gateway: Pushgateway
   private readonly _register: Registry
+  
   // TODO rename to prometheusGatewayUrl
   constructor(readonly config: BoosterConfig, readonly prometheusUrl: string) {
     const Registry = prometheusClient.Registry

@@ -33,11 +33,15 @@ export class PrometheusMetric {
   }
 
   public endEventProcessor(): void {
-    this.end('booster_events_duration_ms_count', ['eventName'])
+    this.end('booster_events_processor_duration_ms_count', ['eventName'])
   }
 
   public incReducer(value: number, eventName: string): void {
     this.inc(value, 'booster_reducer_total_count', ['eventName'], [eventName])
+  }
+
+  public incEventRead(value: number, by: string): void {
+    this.inc(value, 'booster_events_read_total_count', ['by'], [by])
   }
 
   public incMethod(value: number, className: string, methodName: string): void {

@@ -10,10 +10,12 @@ import {
   EventFilter,
   EventFilterByEntity,
   EventFilterByType,
+  AdviceTypes,
 } from '@boostercloud/framework-types'
 import { BoosterAuth } from './booster-auth'
 import { Booster } from './booster'
 import { AroundAdvice, BeforeAdvice } from './decorators/advices'
+import { emit } from './services/advice-emitter'
 
 export class BoosterEventsReader {
   public constructor(readonly config: BoosterConfig, readonly logger: Logger) {}
@@ -22,6 +24,14 @@ export class BoosterEventsReader {
   @BeforeAdvice('BoosterEventsReader')
   public async fetch(eventRequest: EventSearchRequest): Promise<Array<EventSearchResponse>> {
     this.validateRequest(eventRequest)
+    const { filters } = eventRequest
+    if (isByEntitySearch(filters)) {
+      emit(this.config, AdviceTypes.EVENT_READ_HIT, {'by': filters.entity})
+    } else {
+      if (isByEventTypeSearch(filters)) {
+        emit(this.config, AdviceTypes.EVENT_READ_HIT, {'by': filters.type})
+      }
+    }
     return this.processFetch(eventRequest)
   }
 

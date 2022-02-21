@@ -1,5 +1,6 @@
 import { emit } from '../services/advice-emitter'
 import { Booster } from '../index'
+import { AdviceTypes } from '@boostercloud/framework-types'
 
 /*
 * className could be calculated using metadata, a class annotation, etc... 
@@ -9,9 +10,9 @@ export function AroundAdvice(className: string) {
   return (target: unknown, propertyKey: string, descriptor: PropertyDescriptor): PropertyDescriptor => {
     const originalMethod = descriptor.value
     descriptor.value = function (...args: any[]) {
-      emitWithConfig(className, 'AROUND_BEFORE', target, propertyKey, descriptor)
+      emitWithConfig(className, AdviceTypes.AROUND_BEFORE, target, propertyKey, descriptor)
       const result = originalMethod.apply(this, args)
-      emitWithConfig(className, 'AROUND_AFTER', target, propertyKey, descriptor)
+      emitWithConfig(className, AdviceTypes.AROUND_AFTER, target, propertyKey, descriptor)
 
       return result
     }
@@ -23,16 +24,16 @@ export function BeforeAdvice(className: string) {
   return (target: unknown, propertyKey: string, descriptor: PropertyDescriptor): PropertyDescriptor => {
     const originalMethod = descriptor.value
     descriptor.value = function (...args: any[]) {
-      emitWithConfig(className, 'BEFORE', target, propertyKey, descriptor)
+      emitWithConfig(className, AdviceTypes.BEFORE, target, propertyKey, descriptor)
       return originalMethod.apply(this, args)
     }
     return descriptor
   }
 }
 
-function emitWithConfig(className: string, adviceId: string, target: unknown, propertyKey: string, descriptor: PropertyDescriptor): void {
+function emitWithConfig(className: string, adviceType: AdviceTypes, target: unknown, propertyKey: string, descriptor: PropertyDescriptor): void {
   Booster.configureCurrentEnv((config): void => {
-    emit(config, adviceId, {
+    emit(config, adviceType, {
       className: className,
       target: target,
       propertyKey: propertyKey,

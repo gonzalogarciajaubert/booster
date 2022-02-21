@@ -1,4 +1,4 @@
-import { BoosterConfig, RocketDescriptor, EmitParameters } from '@boostercloud/framework-types'
+import { BoosterConfig, RocketDescriptor, EmitParameters, AdviceTypes } from '@boostercloud/framework-types'
 import { HandlerAdvices } from './advices/handler-advices'
 
 export class BoosterRocketPrometheus {
@@ -6,8 +6,8 @@ export class BoosterRocketPrometheus {
     const handler = new HandlerAdvices(config, prometheusUrl)
     config.registerAdviceFunction(
       'PROMETHEUS_ADVISE',
-      async (config: BoosterConfig, emitId: string, adviseParams: EmitParameters) => {
-        handler.handle(config, emitId, adviseParams)
+      async (config: BoosterConfig, adviceType: AdviceTypes, adviseParams: EmitParameters) => {
+        handler.handle(config, adviceType, adviseParams)
       }
     )
   }

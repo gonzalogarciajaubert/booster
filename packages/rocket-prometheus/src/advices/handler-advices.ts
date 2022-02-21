@@ -1,5 +1,5 @@
 import { PrometheusMetric } from '../prometheus/prometheus-metrics'
-import { BoosterConfig, EmitParameters } from '@boostercloud/framework-types'
+import { BoosterConfig, EmitParameters, AdviceTypes } from '@boostercloud/framework-types'
 
 export class HandlerAdvices {
   private readonly PrometheusMetric: PrometheusMetric
@@ -7,69 +7,29 @@ export class HandlerAdvices {
   constructor(config: BoosterConfig, prometheusUrl: string) {
     this.PrometheusMetric = new PrometheusMetric(config, prometheusUrl)
   }
-
-  public handle(config: BoosterConfig, emitId: string, adviseParams: EmitParameters): void {
-    if (!this.handleReadModels(emitId, adviseParams)) {
-      if (!this.handleEventProcessor(emitId, adviseParams)) {
-        this.handleAnnotations(emitId, adviseParams)
-      }
-    }
-  }
-
-  private handleReadModels(emitId: string, adviseParams: EmitParameters): boolean {
-    let found = false
-    switch (emitId) {
-      case 'READMODELS_BEFORE_CUSTOM':
-        found = true
+  
+  // TODO remove config parameter
+  public handle(config: BoosterConfig, adviceType: AdviceTypes, adviseParams: EmitParameters): void {
+    switch (adviceType) {
+      case AdviceTypes.READ_MODELS_HIT:
         this.PrometheusMetric.incReadModel(1, adviseParams['readModelName'], adviseParams['method'])
         break
-      case 'READMODELS_AROUND_BEFORE':
-        found = true
-        this.PrometheusMetric.startReadModel(adviseParams['readModelName'], adviseParams['method'])
-        break
-      case 'READMODELS_AROUND_AFTER':
-        found = true
-        this.PrometheusMetric.endReadModel()
-        break
-    }
-    return found
-  }
-
-  private handleEventProcessor(emitId: string, adviseParams: EmitParameters): boolean {
-    let found = false
-    switch (emitId) {
-      case 'EVENTPROCESSOR_BEFORE_CUSTOM':
-        found = true
+      case AdviceTypes.EVENT_PROCESSOR_HIT:
         this.PrometheusMetric.incEventProcessor(1, adviseParams['entityName'])
         break
-      case 'EVENTPROCESSOR_AROUND_BEFORE':
-        found = true
-        this.PrometheusMetric.startEventProcessor(adviseParams['entityName'])
-        break
-      case 'EVENTPROCESSOR_AROUND_AFTER':
-        found = true
-        this.PrometheusMetric.endEventProcessor()
-        break
-      case 'ENTITYREDUCER_COUNT':
-        found = true
+      case AdviceTypes.ENTITY_REDUCER_HIT:
         this.PrometheusMetric.incReducer(1, adviseParams['entityTypeName'])
         break
-    }
-    return found
-  }
-
-
-  private handleAnnotations(emitId: string, adviseParams: EmitParameters): void {
-    const className = adviseParams['className']
-    const methodName = adviseParams['propertyKey']
-    switch (emitId) {
-      case 'BEFORE':
-        this.PrometheusMetric.incMethod(1, className, methodName)
+      case AdviceTypes.EVENT_READ_HIT:
+        this.PrometheusMetric.incEventRead(1, adviseParams['by'])
         break
-      case 'AROUND_BEFORE':
-        this.PrometheusMetric.startMethod(className, methodName)
+      case AdviceTypes.BEFORE:
+        this.PrometheusMetric.incMethod(1, adviseParams['className'], adviseParams['propertyKey'])
         break
-      case 'AROUND_AFTER':
+      case AdviceTypes.AROUND_BEFORE:
+        this.PrometheusMetric.startMethod(adviseParams['className'], adviseParams['propertyKey'])
+        break
+      case AdviceTypes.AROUND_AFTER:
         this.PrometheusMetric.endMethod()
         break
     }
