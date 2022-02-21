@@ -77,8 +77,8 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 12,
+        "h": 9,
+        "w": 7,
         "x": 0,
         "y": 0
       },
@@ -96,15 +96,103 @@
       },
       "targets": [
         {
-          "datasource": "prometheus",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "exemplar": true,
           "expr": "booster_reducer_total_count{}",
           "interval": "",
-          "legendFormat": "",
+          "legendFormat": "{{eventName}}",
           "refId": "A"
         }
       ],
-      "title": "Panel Title",
+      "title": "Reducer count",
+      "type": "timeseries"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 10,
+        "x": 7,
+        "y": 0
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "booster_methods_total_count{}",
+          "interval": "",
+          "legendFormat": "{{methodName}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Methods total count",
       "type": "timeseries"
     },
     {
@@ -152,7 +240,10 @@
       "pluginVersion": "8.4.1",
       "targets": [
         {
-          "datasource": "prometheus",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "exemplar": true,
           "expr": "rate(booster_events_total_count{}[5000s])",
           "interval": "",
@@ -215,10 +306,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
-        "w": 7,
-        "x": 0,
-        "y": 8
+        "h": 9,
+        "w": 10,
+        "x": 7,
+        "y": 7
       },
       "id": 12,
       "options": {
@@ -234,15 +325,136 @@
       },
       "targets": [
         {
-          "datasource": "prometheus",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "exemplar": true,
           "expr": "rate(booster_reducer_total_count{}[2m])",
           "interval": "",
-          "legendFormat": "",
+          "legendFormat": "{{eventName}}",
           "refId": "A"
         }
       ],
-      "title": "Panel Title",
+      "title": "Reducer rate 2m",
+      "type": "timeseries"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "dispatchCommand"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 7,
+        "x": 0,
+        "y": 9
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "8.4.1",
+      "targets": [
+        {
+          "datasource": "prometheus",
+          "exemplar": true,
+          "expr": "booster_methods_duration_ms_count{}",
+          "format": "time_series",
+          "interval": "",
+          "legendFormat": "{{methodName}}",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "hide": true,
+          "refId": "B",
+          "type": "math"
+        }
+      ],
+      "title": "Methods duration",
       "type": "timeseries"
     },
     {
@@ -269,10 +481,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
-        "w": 10,
-        "x": 7,
-        "y": 8
+        "h": 16,
+        "w": 7,
+        "x": 17,
+        "y": 9
       },
       "id": 2,
       "options": {
@@ -290,9 +502,12 @@
       "pluginVersion": "8.4.1",
       "targets": [
         {
-          "datasource": "prometheus",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "exemplar": true,
-          "expr": "rate(booster_methods_total_count{}[2000s])",
+          "expr": "rate(booster_methods_total_count{}[30m])",
           "interval": "",
           "legendFormat": "{{methodName}}",
           "refId": "A"
@@ -327,64 +542,8 @@
       "gridPos": {
         "h": 9,
         "w": 7,
-        "x": 17,
-        "y": 9
-      },
-      "id": 4,
-      "options": {
-        "displayMode": "gradient",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showUnfilled": true
-      },
-      "pluginVersion": "8.4.1",
-      "targets": [
-        {
-          "datasource": "prometheus",
-          "exemplar": true,
-          "expr": "booster_methods_duration_ms_count{}",
-          "interval": "",
-          "legendFormat": "{{methodName}}",
-          "refId": "A"
-        }
-      ],
-      "title": "Methods duration",
-      "type": "bargauge"
-    },
-    {
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 7,
         "x": 0,
-        "y": 15
+        "y": 16
       },
       "id": 10,
       "options": {
@@ -404,7 +563,10 @@
       "pluginVersion": "8.4.1",
       "targets": [
         {
-          "datasource": "prometheus",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "exemplar": true,
           "expr": "booster_readmodel_total_count{}",
           "interval": "",
@@ -468,91 +630,9 @@
       },
       "gridPos": {
         "h": 9,
-        "w": 8,
-        "x": 9,
-        "y": 17
-      },
-      "id": 5,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": "prometheus",
-          "exemplar": true,
-          "expr": "booster_methods_total_count{}",
-          "interval": "",
-          "legendFormat": "{{methodName}}",
-          "refId": "A"
-        }
-      ],
-      "title": "Methods total count",
-      "type": "timeseries"
-    },
-    {
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 9,
-        "x": 0,
-        "y": 24
+        "w": 10,
+        "x": 7,
+        "y": 16
       },
       "id": 7,
       "options": {
@@ -568,7 +648,10 @@
       },
       "targets": [
         {
-          "datasource": "prometheus",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
           "exemplar": true,
           "expr": "booster_events_total_count{}",
           "interval": "",
@@ -595,6 +678,6 @@
   "timezone": "",
   "title": "Booster",
   "uid": "M0qatoB7k",
-  "version": 1,
+  "version": 6,
   "weekStart": ""
 }
